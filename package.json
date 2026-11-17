@@ -1,0 +1,19 @@
+{
+  "name": "dementia-documentation",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev . --host 127.0.0.1 --port 4174",
+    "build": "node scripts/sync-content.mjs && vitepress build .",
+    "preview": "vitepress preview . --host 127.0.0.1 --port 4174",
+    "sync": "node scripts/sync-content.mjs"
+  },
+  "devDependencies": {
+    "vitepress": "1.6.4",
+    "vue": "3.5.45"
+  },
+  "overrides": {
+    "vite": "6.4.6"
+  }
+}

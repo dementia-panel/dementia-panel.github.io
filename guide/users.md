@@ -1,0 +1,35 @@
+# Users & devices
+
+## Subscription plans
+
+Create a plan from the servers that should be available together. A plan contains servers; access state and expiry belong to the user's issued access.
+
+## Users
+
+Create a user with a username and optional Telegram ID. Assign a subscription plan in the user card, enable or pause access, and choose an expiry date or leave access unlimited.
+
+User API routes accept either the UUID or a positive Telegram ID. A Telegram ID must identify exactly one user.
+
+## Devices
+
+Add named devices in the user card. Each device receives independent credentials on the assigned servers and its own subscription URL. Adding one device does not replace the others.
+
+| Setting | Behavior |
+| --- | --- |
+| Default device limit | Inherited by newly created users. |
+| Per-user limit | Overrides the user's limit; null means unlimited. |
+| Lowering a limit | Keeps existing devices and prevents further issuance above the limit. |
+| Renaming a device | Preserves its keys. |
+| Deleting a device | Removes its link and keys; revocation applies after node synchronization. |
+
+Device counts track **issued key sets**, not unique physical hardware. Importing the same profile on another phone does not create a new record.
+
+## Connection profiles
+
+Each server has its own `.conf`, `.vpn`, `vpn://` key and application-specific QR code. A WireGuard `.conf` is not a multi-server subscription. The subscription page helps the user choose the server and application.
+
+## API operations
+
+- [Create and update users](/api/users)
+- [Issue and revoke device credentials](/api/devices)
+- [Manage subscription access](/api/access)
