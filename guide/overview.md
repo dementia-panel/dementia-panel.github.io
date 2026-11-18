@@ -31,3 +31,7 @@ Each **device** gets its own credentials on the assigned servers and a separate 
 External services authenticate with a named, revocable API key. The reference includes only routes available to those keys, with request/response examples and field descriptions.
 
 [Open the API reference →](/api/)
+
+## Panel header
+
+The upper-right corner contains the project GitHub link, the installed panel version, and sign out. The version is taken from the panel's build metadata.

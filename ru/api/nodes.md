@@ -47,6 +47,7 @@ outline: [2, 2]
 | [].restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | [].restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | [].operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| [].online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | [].error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -71,6 +72,7 @@ outline: [2, 2]
     "restart_revision": 0,
     "restarted_revision": 0,
     "operation_stage": "complete",
+    "online_device_count": 0,
     "error": null
   }
 ]
@@ -139,6 +141,7 @@ outline: [2, 2]
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -162,6 +165,7 @@ outline: [2, 2]
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -247,6 +251,7 @@ outline: [2, 2]
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -270,6 +275,7 @@ outline: [2, 2]
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "queued",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -351,6 +357,7 @@ outline: [2, 2]
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -374,6 +381,7 @@ outline: [2, 2]
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -455,6 +463,7 @@ outline: [2, 2]
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -478,6 +487,7 @@ outline: [2, 2]
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -547,6 +557,7 @@ outline: [2, 2]
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 | responded | boolean | Во время проверки пришёл новый отчёт агента. False допускается при ответе 200. |
 
@@ -571,6 +582,7 @@ outline: [2, 2]
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null,
   "responded": true
 }
@@ -641,6 +653,7 @@ outline: [2, 2]
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -664,6 +677,7 @@ outline: [2, 2]
   "restart_revision": 1,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -807,6 +821,7 @@ HTTP/1.1 204 No Content
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -830,6 +845,7 @@ HTTP/1.1 204 No Content
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "removing",
+  "online_device_count": 0,
   "error": null
 }
 ```

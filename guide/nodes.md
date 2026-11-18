@@ -35,3 +35,9 @@ For installer logs, see [Troubleshooting](./troubleshooting).
 ## Automate provisioning
 
 [Node API reference →](/api/nodes)
+
+## Connected devices
+
+Each node card shows **Connected devices**. The API returns the same value as `online_device_count` in node responses.
+
+A device is counted once per node, even when several access records contain its keys. The estimate requires a node handshake report newer than one minute and a VPN handshake newer than three minutes. Disabled users, expired or disabled access, exhausted traffic limits, and paused or unsynchronized nodes are excluded. If reports stop arriving, the count becomes zero after the freshness window.

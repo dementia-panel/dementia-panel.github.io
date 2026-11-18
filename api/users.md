@@ -117,12 +117,14 @@ Accepts one JSON object, not an array. Creates exactly one user. A non-null plan
 
 | Field | Format | Required | Description |
 | --- | --- | --- | --- |
+| id | string (UUID) or null | No | Caller-supplied user UUID. Omitted or null generates a UUID automatically. Uppercase hexadecimal is accepted and returned in lowercase. An existing UUID returns 409 without changing the existing user. |
 | username | string | Yes | Unique user name, 1–128 UTF-8 bytes after trimming; no NUL. |
 | telegram_id | integer (int64) or null | No | Positive Telegram user ID; null means unset. |
 | plan_id | string (UUID) or null | No | Optional plan UUID. Null creates the user without a plan. |
 
 ```json
 {
+  "id": "33333333-3333-4333-8333-333333333333",
   "username": "alice",
   "telegram_id": 123456789
 }
@@ -207,7 +209,8 @@ Accepts one JSON object, not an array. Creates exactly one user. A non-null plan
 | 201 | Success; response shape shown above. |
 | 400 | Invalid path/query/JSON parameters, malformed value or missing required field. |
 | 401 | API key is missing, invalid, unregistered or deleted. |
-| 409 | State conflict, duplicate, limit reached or ambiguous Telegram ID; see error. |
+| 404 | The supplied plan_id does not exist; the user is not created. |
+| 409 | The UUID or username already exists, or another state conflict prevents creation. The existing user is not modified. |
 | 500 | Internal backend failure; details are in server logs. |
 | 503 | Temporarily unavailable operation, database timeout/lock conflict or backend shutdown. |
 
@@ -215,7 +218,7 @@ Error body example (400):
 
 ```json
 {
-  "error": "invalid page"
+  "error": "invalid user ID"
 }
 ```
 

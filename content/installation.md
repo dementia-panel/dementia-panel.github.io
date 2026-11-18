@@ -1,3 +1,5 @@
+[Сайт документации](https://dementia-panel.github.io/)
+
 <a href="#english"><kbd>English</kbd></a> <a href="#русский"><kbd>Русский</kbd></a>
 
 # dementia

@@ -178,12 +178,14 @@ Accepts one JSON object, not an array. Creates exactly one user. A non-null plan
 
 | Field | Format | Required | Description |
 | --- | --- | --- | --- |
+| id | string (UUID) or null | No | Caller-supplied user UUID. Omitted or null generates a UUID automatically. Uppercase hexadecimal is accepted and returned in lowercase. An existing UUID returns 409 without changing the existing user. |
 | username | string | Yes | Unique user name, 1–128 UTF-8 bytes after trimming; no NUL. |
 | telegram_id | integer (int64) or null | No | Positive Telegram user ID; null means unset. |
 | plan_id | string (UUID) or null | No | Optional plan UUID. Null creates the user without a plan. |
 
 ```json
 {
+  "id": "33333333-3333-4333-8333-333333333333",
   "username": "alice",
   "telegram_id": 123456789
 }
@@ -268,7 +270,8 @@ Accepts one JSON object, not an array. Creates exactly one user. A non-null plan
 | 201 | Success; response shape shown above. |
 | 400 | Invalid path/query/JSON parameters, malformed value or missing required field. |
 | 401 | API key is missing, invalid, unregistered or deleted. |
-| 409 | State conflict, duplicate, limit reached or ambiguous Telegram ID; see error. |
+| 404 | The supplied plan_id does not exist; the user is not created. |
+| 409 | The UUID or username already exists, or another state conflict prevents creation. The existing user is not modified. |
 | 500 | Internal backend failure; details are in server logs. |
 | 503 | Temporarily unavailable operation, database timeout/lock conflict or backend shutdown. |
 
@@ -276,7 +279,7 @@ Error body example (400):
 
 ```json
 {
-  "error": "invalid page"
+  "error": "invalid user ID"
 }
 ```
 
@@ -1098,6 +1101,7 @@ Excludes retired records; this list is not paginated.
 | [].restart_revision | integer (int64) | Requested restart revision. |
 | [].restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | [].operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| [].online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | [].error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -1122,6 +1126,7 @@ Excludes retired records; this list is not paginated.
     "restart_revision": 0,
     "restarted_revision": 0,
     "operation_stage": "complete",
+    "online_device_count": 0,
     "error": null
   }
 ]
@@ -1191,6 +1196,7 @@ Includes operation_stage and error. A retired node may still be returned by UUID
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -1214,6 +1220,7 @@ Includes operation_stage and error. A retired node may still be returned by UUID
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -1300,6 +1307,7 @@ Returns 202 immediately after queuing installation. Poll GET /api/admin/nodes/{i
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -1323,6 +1331,7 @@ Returns 202 immediately after queuing installation. Poll GET /api/admin/nodes/{i
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "queued",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -1405,6 +1414,7 @@ Provide name and/or enabled. Omitted fields remain unchanged. Pause takes effect
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -1428,6 +1438,7 @@ Provide name and/or enabled. Omitted fields remain unchanged. Pause takes effect
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -1510,6 +1521,7 @@ Full replacement: omitted/null host or port resets that override. Send both null
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -1533,6 +1545,7 @@ Full replacement: omitted/null host or port resets that override. Send both null
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -1603,6 +1616,7 @@ Waits up to 12 seconds for a fresh agent report; this is not ICMP ping. No respo
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 | responded | boolean | A newer agent report arrived during the check. False is a valid 200 result. |
 
@@ -1627,6 +1641,7 @@ Waits up to 12 seconds for a fresh agent report; this is not ICMP ping. No respo
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null,
   "responded": true
 }
@@ -1698,6 +1713,7 @@ Only a ready, non-retired node can be restarted. 202 means queued, not completed
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -1721,6 +1737,7 @@ Only a ready, non-retired node can be restarted. 202 means queued, not completed
   "restart_revision": 1,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -1866,6 +1883,7 @@ HTTP/1.1 204 No Content
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -1889,6 +1907,7 @@ HTTP/1.1 204 No Content
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "removing",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -3359,12 +3378,14 @@ UUID записываются строчными буквами с дефиса�
 
 | Поле | Формат | Обязательно | Назначение |
 | --- | --- | --- | --- |
+| id | string (UUID) или null | Нет | UUID пользователя, заданный клиентом. Если поле отсутствует или равно null, UUID создаётся автоматически. Заглавные шестнадцатеричные символы принимаются и приводятся к нижнему регистру. Повторный UUID возвращает 409 без изменения существующего пользователя. |
 | username | string | Да | Уникальное имя пользователя: 1–128 байт UTF-8 после удаления пробелов по краям; без NUL. |
 | telegram_id | integer (int64) or null | Нет | Положительный Telegram ID пользователя; null — не задан. |
 | plan_id | string (UUID) or null | Нет | Необязательный UUID плана. Null — создать пользователя без плана. |
 
 ```json
 {
+  "id": "33333333-3333-4333-8333-333333333333",
   "username": "alice",
   "telegram_id": 123456789
 }
@@ -3449,7 +3470,8 @@ UUID записываются строчными буквами с дефиса�
 | 201 | Успешно; формат ответа показан выше. |
 | 400 | Неверные параметры пути, запроса или JSON; неверный формат либо обязательное поле отсутствует. |
 | 401 | API-ключ отсутствует, неверен, не зарегистрирован или удалён. |
-| 409 | Конфликт состояния, дубликат, достигнутый лимит либо неоднозначный Telegram ID; причина в error. |
+| 404 | Указанный plan_id не существует; пользователь не создаётся. |
+| 409 | UUID или имя пользователя уже заняты либо создание невозможно из-за другого конфликта состояния. Существующий пользователь не изменяется. |
 | 500 | Внутренняя ошибка backend; подробности находятся в серверных логах. |
 | 503 | Временная недоступность операции, таймаут/конфликт блокировок БД либо остановка backend. |
 
@@ -3457,7 +3479,7 @@ UUID записываются строчными буквами с дефиса�
 
 ```json
 {
-  "error": "invalid page"
+  "error": "invalid user ID"
 }
 ```
 
@@ -4279,6 +4301,7 @@ HTTP/1.1 204 No Content
 | [].restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | [].restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | [].operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| [].online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | [].error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -4303,6 +4326,7 @@ HTTP/1.1 204 No Content
     "restart_revision": 0,
     "restarted_revision": 0,
     "operation_stage": "complete",
+    "online_device_count": 0,
     "error": null
   }
 ]
@@ -4372,6 +4396,7 @@ HTTP/1.1 204 No Content
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -4395,6 +4420,7 @@ HTTP/1.1 204 No Content
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -4481,6 +4507,7 @@ HTTP/1.1 204 No Content
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -4504,6 +4531,7 @@ HTTP/1.1 204 No Content
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "queued",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -4586,6 +4614,7 @@ HTTP/1.1 204 No Content
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -4609,6 +4638,7 @@ HTTP/1.1 204 No Content
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -4691,6 +4721,7 @@ HTTP/1.1 204 No Content
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -4714,6 +4745,7 @@ HTTP/1.1 204 No Content
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -4784,6 +4816,7 @@ HTTP/1.1 204 No Content
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 | responded | boolean | Во время проверки пришёл новый отчёт агента. False допускается при ответе 200. |
 
@@ -4808,6 +4841,7 @@ HTTP/1.1 204 No Content
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null,
   "responded": true
 }
@@ -4879,6 +4913,7 @@ HTTP/1.1 204 No Content
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -4902,6 +4937,7 @@ HTTP/1.1 204 No Content
   "restart_revision": 1,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -5047,6 +5083,7 @@ HTTP/1.1 204 No Content
 | restart_revision | integer (int64) | Запрошенная ревизия перезапуска. |
 | restarted_revision | integer (int64) | Ревизия перезапуска, подтверждённая агентом. |
 | operation_stage | string | Этап установки/удаления: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Уникальные выданные устройства с недавней VPN-активностью на этой ноде: отчёт моложе 1 минуты, рукопожатие моложе 3 минут. Учитывается только действующий доступ на включённой, готовой и синхронизированной ноде. Устаревшие отчёты дают 0. Это оценка по рукопожатиям, а не число физических устройств. |
 | error | string or null | Описание ошибки; null, если ошибки нет. |
 
 ```json
@@ -5070,6 +5107,7 @@ HTTP/1.1 204 No Content
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "removing",
+  "online_device_count": 0,
   "error": null
 }
 ```

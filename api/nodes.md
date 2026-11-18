@@ -47,6 +47,7 @@ Excludes retired records; this list is not paginated.
 | [].restart_revision | integer (int64) | Requested restart revision. |
 | [].restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | [].operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| [].online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | [].error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -71,6 +72,7 @@ Excludes retired records; this list is not paginated.
     "restart_revision": 0,
     "restarted_revision": 0,
     "operation_stage": "complete",
+    "online_device_count": 0,
     "error": null
   }
 ]
@@ -139,6 +141,7 @@ Includes operation_stage and error. A retired node may still be returned by UUID
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -162,6 +165,7 @@ Includes operation_stage and error. A retired node may still be returned by UUID
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -247,6 +251,7 @@ Returns 202 immediately after queuing installation. Poll GET /api/admin/nodes/{i
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -270,6 +275,7 @@ Returns 202 immediately after queuing installation. Poll GET /api/admin/nodes/{i
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "queued",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -351,6 +357,7 @@ Provide name and/or enabled. Omitted fields remain unchanged. Pause takes effect
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -374,6 +381,7 @@ Provide name and/or enabled. Omitted fields remain unchanged. Pause takes effect
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -455,6 +463,7 @@ Full replacement: omitted/null host or port resets that override. Send both null
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -478,6 +487,7 @@ Full replacement: omitted/null host or port resets that override. Send both null
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -547,6 +557,7 @@ Waits up to 12 seconds for a fresh agent report; this is not ICMP ping. No respo
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 | responded | boolean | A newer agent report arrived during the check. False is a valid 200 result. |
 
@@ -571,6 +582,7 @@ Waits up to 12 seconds for a fresh agent report; this is not ICMP ping. No respo
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null,
   "responded": true
 }
@@ -641,6 +653,7 @@ Only a ready, non-retired node can be restarted. 202 means queued, not completed
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -664,6 +677,7 @@ Only a ready, non-retired node can be restarted. 202 means queued, not completed
   "restart_revision": 1,
   "restarted_revision": 0,
   "operation_stage": "complete",
+  "online_device_count": 0,
   "error": null
 }
 ```
@@ -807,6 +821,7 @@ HTTP/1.1 204 No Content
 | restart_revision | integer (int64) | Requested restart revision. |
 | restarted_revision | integer (int64) | Restart revision acknowledged by the agent. |
 | operation_stage | string | Installation/removal progress stage. Examples: queued, ssh, download, requirements, docker, build, start, verify, complete, removing, remove_failed, removed. |
+| online_device_count | integer | Distinct issued devices with recent VPN activity on this node: report newer than 1 minute and handshake newer than 3 minutes. Counts only valid access on an enabled, ready and synchronized node. Stale reports return 0. This is a handshake-based estimate, not a physical hardware count. |
 | error | string or null | Safe error description; null if no current error. |
 
 ```json
@@ -830,6 +845,7 @@ HTTP/1.1 204 No Content
   "restart_revision": 0,
   "restarted_revision": 0,
   "operation_stage": "removing",
+  "online_device_count": 0,
   "error": null
 }
 ```

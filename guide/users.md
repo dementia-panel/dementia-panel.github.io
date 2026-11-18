@@ -33,3 +33,9 @@ Each server has its own `.conf`, `.vpn`, `vpn://` key and application-specific Q
 - [Create and update users](/api/users)
 - [Issue and revoke device credentials](/api/devices)
 - [Manage subscription access](/api/access)
+
+## Set a user UUID through the API
+
+`POST /api/admin/users` accepts an optional `id` containing the user's UUID. Omitting it or passing `null` generates a UUID automatically. An existing UUID returns `409` and never replaces the existing user. This works both with and without `plan_id`.
+
+[Create user API →](/api/users#create-user)
