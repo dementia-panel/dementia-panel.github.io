@@ -39,3 +39,11 @@ Each server has its own `.conf`, `.vpn`, `vpn://` key and application-specific Q
 `POST /api/admin/users` accepts an optional `id` containing the user's UUID. Omitting it or passing `null` generates a UUID automatically. An existing UUID returns `409` and never replaces the existing user. This works both with and without `plan_id`.
 
 [Create user API →](/api/users#create-user)
+
+## Expiration date and time
+
+Choose a plan when creating a user and clear **No expiration** to set an exact date and time. The user and subscription expiration are saved together. You can change the same setting from the user card. Dates are entered in your browser’s time zone and sent to the API as RFC3339 timestamps. The subscription page also displays the expiration time.
+
+## Sort and filter users
+
+The user list shows the newest accounts first. Choose **Oldest first**, **By username**, or **Last connected** in the sorting menu. Sorting works together with username/Telegram ID search, status filters and pagination. The current query is stored in the URL and survives a page reload.

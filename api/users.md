@@ -27,7 +27,7 @@ Parameters, request examples and response shapes for service API integrations.
 | `per_page` | integer | No | `25` | Users per page: 1–100. |
 | `search` | string | No | — | up to 128 UTF-8 bytes. Literal substring in username (case insensitive) or telegram_id. |
 | `status` | string | No | `all` | all, online, disabled. |
-| `sort` | string | No | `username` | username, last_connected_at (descending, nulls last). UUID breaks ties. |
+| `sort` | string | No | `created_at` | created_at: newest first; created_at_asc: oldest first; username: alphabetically; last_connected_at: most recent first, nulls last. UUID breaks ties. Search and status filters apply before pagination. |
 
 **Request body:** none.
 
@@ -121,12 +121,24 @@ Accepts one JSON object, not an array. Creates exactly one user. A non-null plan
 | username | string | Yes | Unique user name, 1–128 UTF-8 bytes after trimming; no NUL. |
 | telegram_id | integer (int64) or null | No | Positive Telegram user ID; null means unset. |
 | plan_id | string (UUID) or null | No | Optional plan UUID. Null creates the user without a plan. |
+| expires_at | string (RFC3339) or null | No | Exact subscription expiration, including time and a UTC offset. Requires non-null plan_id when set. Omitted or null means no expiration. |
 
 ```json
 {
   "id": "33333333-3333-4333-8333-333333333333",
   "username": "alice",
   "telegram_id": 123456789
+}
+```
+
+
+Request with a plan and expiration:
+
+```json
+{
+  "username": "alice",
+  "plan_id": "22222222-2222-4222-8222-222222222222",
+  "expires_at": "2030-02-01T15:30:00Z"
 }
 ```
 
@@ -182,6 +194,7 @@ Accepts one JSON object, not an array. Creates exactly one user. A non-null plan
 | online_device_count | integer | Issued devices with recent VPN activity. |
 | subscription_url | string (HTTPS URL) | Issued subscription page URL; treat it as a secret. |
 | access_id | string (UUID) | Created user access record ID. |
+| expires_at | string (RFC3339) or null | Saved subscription expiration; null means unlimited. |
 
 ```json
 {
@@ -198,7 +211,8 @@ Accepts one JSON object, not an array. Creates exactly one user. A non-null plan
   "device_count": 1,
   "online_device_count": 0,
   "subscription_url": "https://panel.example.com/s/EXAMPLE_SUBSCRIPTION_TOKEN",
-  "access_id": "66666666-6666-4666-8666-666666666666"
+  "access_id": "66666666-6666-4666-8666-666666666666",
+  "expires_at": "2030-02-01T15:30:00Z"
 }
 ```
 

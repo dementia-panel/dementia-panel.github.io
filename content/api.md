@@ -87,7 +87,7 @@ Every endpoint below includes its own parameter/status tables and a complete res
 | `per_page` | integer | No | `25` | Users per page: 1–100. |
 | `search` | string | No | — | up to 128 UTF-8 bytes. Literal substring in username (case insensitive) or telegram_id. |
 | `status` | string | No | `all` | all, online, disabled. |
-| `sort` | string | No | `username` | username, last_connected_at (descending, nulls last). UUID breaks ties. |
+| `sort` | string | No | `created_at` | created_at: newest first; created_at_asc: oldest first; username: alphabetically; last_connected_at: most recent first, nulls last. UUID breaks ties. Search and status filters apply before pagination. |
 
 **Request body:** none.
 
@@ -182,12 +182,24 @@ Accepts one JSON object, not an array. Creates exactly one user. A non-null plan
 | username | string | Yes | Unique user name, 1–128 UTF-8 bytes after trimming; no NUL. |
 | telegram_id | integer (int64) or null | No | Positive Telegram user ID; null means unset. |
 | plan_id | string (UUID) or null | No | Optional plan UUID. Null creates the user without a plan. |
+| expires_at | string (RFC3339) or null | No | Exact subscription expiration, including time and a UTC offset. Requires non-null plan_id when set. Omitted or null means no expiration. |
 
 ```json
 {
   "id": "33333333-3333-4333-8333-333333333333",
   "username": "alice",
   "telegram_id": 123456789
+}
+```
+
+
+Request with a plan and expiration:
+
+```json
+{
+  "username": "alice",
+  "plan_id": "22222222-2222-4222-8222-222222222222",
+  "expires_at": "2030-02-01T15:30:00Z"
 }
 ```
 
@@ -243,6 +255,7 @@ Accepts one JSON object, not an array. Creates exactly one user. A non-null plan
 | online_device_count | integer | Issued devices with recent VPN activity. |
 | subscription_url | string (HTTPS URL) | Issued subscription page URL; treat it as a secret. |
 | access_id | string (UUID) | Created user access record ID. |
+| expires_at | string (RFC3339) or null | Saved subscription expiration; null means unlimited. |
 
 ```json
 {
@@ -259,7 +272,8 @@ Accepts one JSON object, not an array. Creates exactly one user. A non-null plan
   "device_count": 1,
   "online_device_count": 0,
   "subscription_url": "https://panel.example.com/s/EXAMPLE_SUBSCRIPTION_TOKEN",
-  "access_id": "66666666-6666-4666-8666-666666666666"
+  "access_id": "66666666-6666-4666-8666-666666666666",
+  "expires_at": "2030-02-01T15:30:00Z"
 }
 ```
 
@@ -3287,7 +3301,7 @@ UUID записываются строчными буквами с дефиса�
 | `per_page` | integer | Нет | `25` | Количество пользователей на странице: 1–100. |
 | `search` | string | Нет | — | до 128 байт UTF-8. Буквальная подстрока имени без учёта регистра либо Telegram ID. |
 | `status` | string | Нет | `all` | all, online, disabled. |
-| `sort` | string | Нет | `username` | username или last_connected_at (новые сначала, null в конце). При совпадении сортировка по UUID. |
+| `sort` | string | Нет | `created_at` | created_at: сначала новые; created_at_asc: сначала старые; username: по имени; last_connected_at: по последнему подключению, null в конце. UUID определяет порядок при равенстве значений. Поиск и статус применяются до пагинации. |
 
 **Тело запроса:** отсутствует.
 
@@ -3382,12 +3396,24 @@ UUID записываются строчными буквами с дефиса�
 | username | string | Да | Уникальное имя пользователя: 1–128 байт UTF-8 после удаления пробелов по краям; без NUL. |
 | telegram_id | integer (int64) or null | Нет | Положительный Telegram ID пользователя; null — не задан. |
 | plan_id | string (UUID) or null | Нет | Необязательный UUID плана. Null — создать пользователя без плана. |
+| expires_at | string (RFC3339) или null | Нет | Точные дата и время окончания подписки с UTC-смещением. При заданном значении требуется непустой plan_id. Отсутствие поля или null означает отсутствие срока. |
 
 ```json
 {
   "id": "33333333-3333-4333-8333-333333333333",
   "username": "alice",
   "telegram_id": 123456789
+}
+```
+
+
+Запрос с подпиской и сроком действия:
+
+```json
+{
+  "username": "alice",
+  "plan_id": "22222222-2222-4222-8222-222222222222",
+  "expires_at": "2030-02-01T15:30:00Z"
 }
 ```
 
@@ -3443,6 +3469,7 @@ UUID записываются строчными буквами с дефиса�
 | online_device_count | integer | Выданные устройства с недавней VPN-активностью. |
 | subscription_url | string (HTTPS URL) | Выданная ссылка страницы подписки; храните как секрет. |
 | access_id | string (UUID) | UUID созданного доступа пользователя. |
+| expires_at | string (RFC3339) или null | Сохранённый срок действия подписки; null — без ограничения срока. |
 
 ```json
 {
@@ -3459,7 +3486,8 @@ UUID записываются строчными буквами с дефиса�
   "device_count": 1,
   "online_device_count": 0,
   "subscription_url": "https://panel.example.com/s/EXAMPLE_SUBSCRIPTION_TOKEN",
-  "access_id": "66666666-6666-4666-8666-666666666666"
+  "access_id": "66666666-6666-4666-8666-666666666666",
+  "expires_at": "2030-02-01T15:30:00Z"
 }
 ```
 
