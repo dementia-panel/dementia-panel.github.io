@@ -38,7 +38,7 @@ export default defineConfig({
   root: {
    label: 'English', lang: 'en',
    themeConfig: {
-    nav: [{ text: 'Guide', link: '/guide/overview', activeMatch: '/guide/' }, { text: 'API reference', link: '/api/', activeMatch: '/api/' }],
+	    nav: [{ text: 'Guide', link: '/guide/overview', activeMatch: '/guide/' }, { text: 'API reference', link: '/api/', activeMatch: '/api/' }, { text: 'Changelog', link: '/changelog' }],
     sidebar: { '/guide/': sidebar(false), '/api/': sidebar(false) },
     outline: { label: 'On this page', level: [2, 3] },
     docFooter: { prev: 'Previous', next: 'Next' },
@@ -48,7 +48,7 @@ export default defineConfig({
   ru: {
    label: 'Русский', lang: 'ru', description: 'Документация панели управления VPN dementia.',
    themeConfig: {
-    nav: [{ text: 'Руководство', link: '/ru/guide/overview', activeMatch: '/ru/guide/' }, { text: 'Справочник API', link: '/ru/api/', activeMatch: '/ru/api/' }],
+	    nav: [{ text: 'Руководство', link: '/ru/guide/overview', activeMatch: '/ru/guide/' }, { text: 'Справочник API', link: '/ru/api/', activeMatch: '/ru/api/' }, { text: 'История изменений', link: '/ru/changelog' }],
     sidebar: { '/ru/guide/': sidebar(true), '/ru/api/': sidebar(true) },
     outline: { label: 'На этой странице', level: [2, 3] },
     docFooter: { prev: 'Предыдущая', next: 'Следующая' },

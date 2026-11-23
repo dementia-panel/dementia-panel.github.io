@@ -13,7 +13,7 @@ const text = computed(() => ru.value ? {
  cards: [
   { n: '01', title: 'Развернуть панель', description: 'Docker, конфигурация, сертификат и первый вход. Пошагово, без догадок.', path: '/guide/installation', tag: 'Установка' },
   { n: '02', title: 'Подключить инфраструктуру', description: 'Добавьте ноды по SSH, назначьте подписки и выдайте ключи устройствам.', path: '/guide/nodes', tag: 'Управление' },
-  { n: '03', title: 'Создать интеграцию', description: '43 метода API. Параметры, статусы и готовые примеры каждого запроса.', path: '/api/', tag: 'API reference' },
+  { n: '03', title: 'Создать интеграцию', description: '44 метода API. Параметры, статусы и готовые примеры каждого запроса.', path: '/api/', tag: 'API reference' },
  ],
  preview: 'ЗНАКОМЫЙ ИНТЕРФЕЙС', previewTitle: 'Видеть всю картину.', previewText: 'Ноды, пользователи и трафик — в одной панели. Документация помогает настроить каждый шаг.', caption: 'Обзор панели · Демонстрационные данные',
  quick: 'Быстрый доступ', links: ['Переменные окружения', 'HTTPS и сертификаты', 'Пользователи и устройства', 'Решение проблем'],
@@ -26,7 +26,7 @@ const text = computed(() => ru.value ? {
  cards: [
   { n: '01', title: 'Deploy your panel', description: 'Docker, configuration, certificates and your first sign-in. One step at a time.', path: '/guide/installation', tag: 'Installation' },
   { n: '02', title: 'Connect your infrastructure', description: 'Provision nodes over SSH, assign subscriptions and issue device credentials.', path: '/guide/nodes', tag: 'Operations' },
-  { n: '03', title: 'Build an integration', description: '43 API endpoints. Parameters, status codes and examples for every request.', path: '/api/', tag: 'API reference' },
+  { n: '03', title: 'Build an integration', description: '44 API endpoints. Parameters, status codes and examples for every request.', path: '/api/', tag: 'API reference' },
  ],
  preview: 'A FAMILIAR WORKSPACE', previewTitle: 'See the whole picture.', previewText: 'Nodes, users and traffic in a single panel. The documentation helps you configure every step.', caption: 'Panel overview · Sample data',
  quick: 'Quick reference', links: ['Environment variables', 'HTTPS & certificates', 'Users & devices', 'Troubleshooting'],
