@@ -16,6 +16,14 @@ type Release = {
 
 const releases = computed<Release[]>(() => ru.value ? [
   {
+    version: '0.6.2', date: '23 ноября 2026', title: 'Событие первого подключения',
+    summary: 'Вебхук сообщает о первом подключении пользователя к VPN.',
+    changes: [
+      'Добавлено событие user.first_connected с защитой от повторной отправки при подключении нескольких устройств или серверов.',
+      'Заголовки подписи и времени вебхука называются X-Dementia-Signature и X-Dementia-Timestamp.'
+    ], components: ['Backend']
+  },
+  {
     version: '0.6.1', date: '23 ноября 2026', title: 'Ноды с первого взгляда',
     summary: 'Новые показатели в панели и понятные названия VPN-профилей в AmneziaWG.',
     changes: [
@@ -75,6 +83,14 @@ const releases = computed<Release[]>(() => ru.value ? [
     ], components: ['Backend', 'Panel']
   }
 ] : [
+  {
+    version: '0.6.2', date: 'November 23, 2026', title: 'First connection event',
+    summary: 'The webhook now reports a user’s first VPN connection.',
+    changes: [
+      'Added user.first_connected with duplicate protection across devices and servers.',
+      'Webhook signature and time headers are X-Dementia-Signature and X-Dementia-Timestamp.'
+    ], components: ['Backend']
+  },
   {
     version: '0.6.1', date: 'November 23, 2026', title: 'Nodes at a glance',
     summary: 'New panel metrics and recognizable VPN profile names in AmneziaWG.',
