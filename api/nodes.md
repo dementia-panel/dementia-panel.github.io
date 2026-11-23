@@ -97,6 +97,47 @@ Error body example (500):
 
 
 
+## Get node metrics
+
+<Endpoint method="GET" path="/api/admin/nodes/metrics" />
+
+Returns live unique users across all active nodes, the highest observed simultaneous count since tracking began, and total VPN traffic reported today in UTC. The peak is sampled every 15 seconds; brief activity between samples may be missed. A user connected to multiple nodes counts once.
+
+**Request URL**
+
+| Parameter | Value |
+| --- | --- |
+| Method | `GET` |
+| URL | `https://panel.example.com/api/admin/nodes/metrics` |
+
+**Request body:** none.
+
+**Success response: 200**
+
+| Field | Format | Description |
+| --- | --- | --- |
+| online_users | integer | Unique users with recent valid VPN handshakes on enabled, synchronized nodes. |
+| peak_online_users | integer | Highest sampled count since the metrics migration was installed. |
+| traffic_today_bytes | integer (int64) | Sum of received and sent bytes reported by all nodes since 00:00 UTC. |
+
+```json
+{
+  "online_users": 12,
+  "peak_online_users": 27,
+  "traffic_today_bytes": 104857600
+}
+```
+
+**Response statuses**
+
+| Status | Meaning |
+| --- | --- |
+| 200 | Success; response shape shown above. |
+| 401 | API key is missing, invalid, unregistered or deleted. |
+| 500 | Internal backend failure; details are in server logs. |
+| 503 | Database timeout/lock conflict or backend shutdown. |
+
+
 ## Get node
 
 <Endpoint method="GET" path="/api/admin/nodes/{id}" />

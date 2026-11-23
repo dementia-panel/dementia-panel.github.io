@@ -11,7 +11,7 @@ if (process.argv.includes('--refresh')) {
 const api = await readFile(path.join(root, 'content/api.md'), 'utf8')
 const installation = await readFile(path.join(root, 'content/installation.md'), 'utf8')
 const groups = ['users', 'devices', 'nodes', 'plans', 'access', 'traffic', 'settings']
-const boundaries = [0, 6, 14, 23, 29, 40, 41, 43]
+const boundaries = [0, 6, 14, 24, 30, 41, 42, 44]
 const groupNames = {
   en: ['Users', 'Devices', 'Nodes', 'Subscription plans', 'Issued access', 'Traffic', 'Device settings'],
   ru: ['Пользователи', 'Устройства', 'Ноды', 'Планы подписок', 'Выданный доступ', 'Трафик', 'Настройки устройств'],
@@ -25,7 +25,7 @@ for (const language of ['en', 'ru']) {
   const prefix = ru ? 'ru/' : ''
   const section = ru ? api.split('<a id="russian"></a>')[1] : api.split('<a id="russian"></a>')[0]
   const matches = [...section.matchAll(/<a id="(?:en|ru)-endpoint-(\d+)"><\/a>\s*\n#### ([^\n]+)\n\n##### `([^`]+)`/g)]
-  if (matches.length !== 43) throw new Error(`Expected 43 API endpoints for ${language}; got ${matches.length}`)
+  if (matches.length !== 44) throw new Error(`Expected 44 API endpoints for ${language}; got ${matches.length}`)
   const entries = matches.map((match, index) => {
     const raw = section.slice(match.index, matches[index + 1]?.index ?? section.length)
     const [method, ...parts] = match[3].split(' ')
@@ -52,4 +52,4 @@ for (const language of ['en', 'ru']) {
   await save(`${prefix}guide/certificates.md`, `---\ntitle: ${ru ? 'HTTPS и сертификаты' : 'HTTPS & certificates'}\n---\n\n# ${ru ? 'HTTPS и сертификаты' : 'HTTPS & certificates'}\n\n` + [chunks[5], chunks[9]].join('\n\n').replace(ru ? 'из шага 5' : 'from step 5', ru ? 'из раздела выше' : 'from the section above'))
   await save(`${prefix}guide/troubleshooting.md`, `---\ntitle: ${ru ? 'Решение проблем' : 'Troubleshooting'}\n---\n\n# ${ru ? 'Решение проблем' : 'Troubleshooting'}\n\n` + chunks[10] + '\n\n' + (ru ? '## Состояние контейнеров\n\n```sh\nsudo docker compose ps\n```\n\n## Логи backend\n\n```sh\nsudo docker compose logs --tail=100 backend\n```\n\n## Ошибка установки ноды\n\nПосмотрите этап установки и сообщение ошибки в карточке ноды. На VPS журнал установки находится в `/var/log/dementia-install.log`.\n\n```sh\nsudo tail -n 100 /var/log/dementia-install.log\n```\n' : '## Container status\n\n```sh\nsudo docker compose ps\n```\n\n## Backend logs\n\n```sh\nsudo docker compose logs --tail=100 backend\n```\n\n## Node installation errors\n\nCheck the installation stage and error in the node card. On the VPS, the installation log is `/var/log/dementia-install.log`.\n\n```sh\nsudo tail -n 100 /var/log/dementia-install.log\n```\n'))
 }
-console.log('Generated bilingual installation guides and 43 API endpoints across 14 reference pages.')
+console.log('Generated bilingual installation guides and 44 API endpoints across 14 reference pages.')

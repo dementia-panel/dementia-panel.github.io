@@ -37,34 +37,34 @@ Every endpoint below includes its own parameter/status tables and a complete res
 - [Change user’s device limit](#en-endpoint-13)
 - [Get existing connection keys for device and server](#en-endpoint-14)
 - [List active node records](#en-endpoint-15)
-- [Get node](#en-endpoint-16)
-- [Add node](#en-endpoint-17)
-- [Update node](#en-endpoint-18)
-- [Set or reset a node’s public VPN endpoint](#en-endpoint-19)
-- [Check whether node sends a fresh report](#en-endpoint-20)
-- [Request restart of node](#en-endpoint-21)
-- [Request restart of all ready nodes](#en-endpoint-22)
-- [Delete node](#en-endpoint-23)
-- [List reusable subscription plans](#en-endpoint-24)
-- [Create subscription plan](#en-endpoint-25)
-- [Update subscription plan](#en-endpoint-26)
-- [Delete subscription plan](#en-endpoint-27)
-- [Get user’s currently assigned access](#en-endpoint-28)
-- [Assign a plan and set user’s access expiry](#en-endpoint-29)
-- [List issued user access records](#en-endpoint-30)
-- [Issue direct subscription to user](#en-endpoint-31)
-- [Get a saved subscription link](#en-endpoint-32)
-- [Enable, disable or change expiry of access record](#en-endpoint-33)
-- [Replace servers in issued access record](#en-endpoint-34)
-- [Rotate subscription and device links without changing VPN keys](#en-endpoint-35)
-- [Replace links and revoke previously issued VPN keys](#en-endpoint-36)
-- [Delete issued access record](#en-endpoint-37)
-- [Set or remove access record’s traffic limit](#en-endpoint-38)
-- [Reset accounted traffic for access record](#en-endpoint-39)
-- [Configure automatic traffic reset for access record](#en-endpoint-40)
-- [Get daily traffic statistics](#en-endpoint-41)
-- [Get the default device limit for new users](#en-endpoint-42)
-- [Change the default device limit for new users](#en-endpoint-43)
+- [Get node](#en-endpoint-17)
+- [Add node](#en-endpoint-18)
+- [Update node](#en-endpoint-19)
+- [Set or reset a node’s public VPN endpoint](#en-endpoint-20)
+- [Check whether node sends a fresh report](#en-endpoint-21)
+- [Request restart of node](#en-endpoint-22)
+- [Request restart of all ready nodes](#en-endpoint-23)
+- [Delete node](#en-endpoint-24)
+- [List reusable subscription plans](#en-endpoint-25)
+- [Create subscription plan](#en-endpoint-26)
+- [Update subscription plan](#en-endpoint-27)
+- [Delete subscription plan](#en-endpoint-28)
+- [Get user’s currently assigned access](#en-endpoint-29)
+- [Assign a plan and set user’s access expiry](#en-endpoint-30)
+- [List issued user access records](#en-endpoint-31)
+- [Issue direct subscription to user](#en-endpoint-32)
+- [Get a saved subscription link](#en-endpoint-33)
+- [Enable, disable or change expiry of access record](#en-endpoint-34)
+- [Replace servers in issued access record](#en-endpoint-35)
+- [Rotate subscription and device links without changing VPN keys](#en-endpoint-36)
+- [Replace links and revoke previously issued VPN keys](#en-endpoint-37)
+- [Delete issued access record](#en-endpoint-38)
+- [Set or remove access record’s traffic limit](#en-endpoint-39)
+- [Reset accounted traffic for access record](#en-endpoint-40)
+- [Configure automatic traffic reset for access record](#en-endpoint-41)
+- [Get daily traffic statistics](#en-endpoint-42)
+- [Get the default device limit for new users](#en-endpoint-43)
+- [Change the default device limit for new users](#en-endpoint-44)
 
 <a id="en-endpoint-1"></a>
 
@@ -1166,6 +1166,48 @@ Error body example (500):
 
 <a id="en-endpoint-16"></a>
 
+#### Get node metrics
+
+##### `GET /api/admin/nodes/metrics`
+
+Returns live unique users across all active nodes, the highest observed simultaneous count since tracking began, and total VPN traffic reported today in UTC. The peak is sampled every 15 seconds; brief activity between samples may be missed. A user connected to multiple nodes counts once.
+
+**Request URL**
+
+| Parameter | Value |
+| --- | --- |
+| Method | `GET` |
+| URL | `https://panel.example.com/api/admin/nodes/metrics` |
+
+**Request body:** none.
+
+**Success response: 200**
+
+| Field | Format | Description |
+| --- | --- | --- |
+| online_users | integer | Unique users with recent valid VPN handshakes on enabled, synchronized nodes. |
+| peak_online_users | integer | Highest sampled count since the metrics migration was installed. |
+| traffic_today_bytes | integer (int64) | Sum of received and sent bytes reported by all nodes since 00:00 UTC. |
+
+```json
+{
+  "online_users": 12,
+  "peak_online_users": 27,
+  "traffic_today_bytes": 104857600
+}
+```
+
+**Response statuses**
+
+| Status | Meaning |
+| --- | --- |
+| 200 | Success; response shape shown above. |
+| 401 | API key is missing, invalid, unregistered or deleted. |
+| 500 | Internal backend failure; details are in server logs. |
+| 503 | Database timeout/lock conflict or backend shutdown. |
+
+<a id="en-endpoint-17"></a>
+
 #### Get node
 
 ##### `GET /api/admin/nodes/{id}`
@@ -1259,7 +1301,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-17"></a>
+<a id="en-endpoint-18"></a>
 
 #### Add node
 
@@ -1371,7 +1413,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-18"></a>
+<a id="en-endpoint-19"></a>
 
 #### Update node
 
@@ -1477,7 +1519,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-19"></a>
+<a id="en-endpoint-20"></a>
 
 #### Set or reset a node’s public VPN endpoint
 
@@ -1584,7 +1626,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-20"></a>
+<a id="en-endpoint-21"></a>
 
 #### Check whether node sends a fresh report
 
@@ -1681,7 +1723,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-21"></a>
+<a id="en-endpoint-22"></a>
 
 #### Request restart of node
 
@@ -1776,7 +1818,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-22"></a>
+<a id="en-endpoint-23"></a>
 
 #### Request restart of all ready nodes
 
@@ -1821,7 +1863,7 @@ Error body example (500):
 ```
 
 
-<a id="en-endpoint-23"></a>
+<a id="en-endpoint-24"></a>
 
 #### Delete node
 
@@ -1948,7 +1990,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-24"></a>
+<a id="en-endpoint-25"></a>
 
 #### List reusable subscription plans
 
@@ -2004,7 +2046,7 @@ Error body example (500):
 ```
 
 
-<a id="en-endpoint-25"></a>
+<a id="en-endpoint-26"></a>
 
 #### Create subscription plan
 
@@ -2073,7 +2115,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-26"></a>
+<a id="en-endpoint-27"></a>
 
 #### Update subscription plan
 
@@ -2149,7 +2191,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-27"></a>
+<a id="en-endpoint-28"></a>
 
 #### Delete subscription plan
 
@@ -2201,7 +2243,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-28"></a>
+<a id="en-endpoint-29"></a>
 
 #### Get user’s currently assigned access
 
@@ -2285,7 +2327,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-29"></a>
+<a id="en-endpoint-30"></a>
 
 #### Assign a plan and set user’s access expiry
 
@@ -2375,7 +2417,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-30"></a>
+<a id="en-endpoint-31"></a>
 
 #### List issued user access records
 
@@ -2445,7 +2487,7 @@ Error body example (500):
 ```
 
 
-<a id="en-endpoint-31"></a>
+<a id="en-endpoint-32"></a>
 
 #### Issue direct subscription to user
 
@@ -2536,7 +2578,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-32"></a>
+<a id="en-endpoint-33"></a>
 
 #### Get a saved subscription link
 
@@ -2591,7 +2633,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-33"></a>
+<a id="en-endpoint-34"></a>
 
 #### Enable, disable or change expiry of access record
 
@@ -2653,7 +2695,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-34"></a>
+<a id="en-endpoint-35"></a>
 
 #### Replace servers in issued access record
 
@@ -2717,7 +2759,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-35"></a>
+<a id="en-endpoint-36"></a>
 
 #### Rotate subscription and device links without changing VPN keys
 
@@ -2772,7 +2814,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-36"></a>
+<a id="en-endpoint-37"></a>
 
 #### Replace links and revoke previously issued VPN keys
 
@@ -2827,7 +2869,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-37"></a>
+<a id="en-endpoint-38"></a>
 
 #### Delete issued access record
 
@@ -2878,7 +2920,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-38"></a>
+<a id="en-endpoint-39"></a>
 
 #### Set or remove access record’s traffic limit
 
@@ -2937,7 +2979,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-39"></a>
+<a id="en-endpoint-40"></a>
 
 #### Reset accounted traffic for access record
 
@@ -2988,7 +3030,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-40"></a>
+<a id="en-endpoint-41"></a>
 
 #### Configure automatic traffic reset for access record
 
@@ -3049,7 +3091,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-41"></a>
+<a id="en-endpoint-42"></a>
 
 #### Get daily traffic statistics
 
@@ -3115,7 +3157,7 @@ Error body example (400):
 ```
 
 
-<a id="en-endpoint-42"></a>
+<a id="en-endpoint-43"></a>
 
 #### Get the default device limit for new users
 
@@ -3160,7 +3202,7 @@ Error body example (500):
 ```
 
 
-<a id="en-endpoint-43"></a>
+<a id="en-endpoint-44"></a>
 
 #### Change the default device limit for new users
 
@@ -3251,34 +3293,34 @@ UUID записываются строчными буквами с дефиса�
 - [Изменить лимит устройств пользователя](#ru-endpoint-13)
 - [Получить существующие ключи устройства для сервера](#ru-endpoint-14)
 - [Получить список нод](#ru-endpoint-15)
-- [Получить ноду](#ru-endpoint-16)
-- [Добавить ноду](#ru-endpoint-17)
-- [Изменить ноду](#ru-endpoint-18)
-- [Изменить или сбросить публичный VPN-адрес ноды](#ru-endpoint-19)
-- [Проверить получение нового отчёта от ноды](#ru-endpoint-20)
-- [Запросить перезапуск ноды](#ru-endpoint-21)
-- [Запросить перезапуск всех готовых нод](#ru-endpoint-22)
-- [Удалить ноду](#ru-endpoint-23)
-- [Получить наборы серверов подписок](#ru-endpoint-24)
-- [Создать план подписки](#ru-endpoint-25)
-- [Изменить план подписки](#ru-endpoint-26)
-- [Удалить план подписки](#ru-endpoint-27)
-- [Получить текущий доступ пользователя](#ru-endpoint-28)
-- [Назначить план и срок доступа одному пользователю](#ru-endpoint-29)
-- [Получить список выданного доступа](#ru-endpoint-30)
-- [Выдать прямой доступ одному пользователю](#ru-endpoint-31)
-- [Получить сохранённую ссылку подписки](#ru-endpoint-32)
-- [Включить, отключить или изменить срок доступа](#ru-endpoint-33)
-- [Заменить серверы выданного доступа](#ru-endpoint-34)
-- [Заменить ссылки подписки и устройств без замены VPN-ключей](#ru-endpoint-35)
-- [Заменить ссылки и отозвать прежние VPN-ключи](#ru-endpoint-36)
-- [Удалить выданный доступ](#ru-endpoint-37)
-- [Задать или снять лимит трафика доступа](#ru-endpoint-38)
-- [Сбросить учтённый трафик доступа](#ru-endpoint-39)
-- [Настроить автоматический сброс трафика доступа](#ru-endpoint-40)
-- [Получить статистику трафика по дням](#ru-endpoint-41)
-- [Получить лимит устройств по умолчанию для новых пользователей](#ru-endpoint-42)
-- [Изменить лимит устройств по умолчанию для новых пользователей](#ru-endpoint-43)
+- [Получить ноду](#ru-endpoint-17)
+- [Добавить ноду](#ru-endpoint-18)
+- [Изменить ноду](#ru-endpoint-19)
+- [Изменить или сбросить публичный VPN-адрес ноды](#ru-endpoint-20)
+- [Проверить получение нового отчёта от ноды](#ru-endpoint-21)
+- [Запросить перезапуск ноды](#ru-endpoint-22)
+- [Запросить перезапуск всех готовых нод](#ru-endpoint-23)
+- [Удалить ноду](#ru-endpoint-24)
+- [Получить наборы серверов подписок](#ru-endpoint-25)
+- [Создать план подписки](#ru-endpoint-26)
+- [Изменить план подписки](#ru-endpoint-27)
+- [Удалить план подписки](#ru-endpoint-28)
+- [Получить текущий доступ пользователя](#ru-endpoint-29)
+- [Назначить план и срок доступа одному пользователю](#ru-endpoint-30)
+- [Получить список выданного доступа](#ru-endpoint-31)
+- [Выдать прямой доступ одному пользователю](#ru-endpoint-32)
+- [Получить сохранённую ссылку подписки](#ru-endpoint-33)
+- [Включить, отключить или изменить срок доступа](#ru-endpoint-34)
+- [Заменить серверы выданного доступа](#ru-endpoint-35)
+- [Заменить ссылки подписки и устройств без замены VPN-ключей](#ru-endpoint-36)
+- [Заменить ссылки и отозвать прежние VPN-ключи](#ru-endpoint-37)
+- [Удалить выданный доступ](#ru-endpoint-38)
+- [Задать или снять лимит трафика доступа](#ru-endpoint-39)
+- [Сбросить учтённый трафик доступа](#ru-endpoint-40)
+- [Настроить автоматический сброс трафика доступа](#ru-endpoint-41)
+- [Получить статистику трафика по дням](#ru-endpoint-42)
+- [Получить лимит устройств по умолчанию для новых пользователей](#ru-endpoint-43)
+- [Изменить лимит устройств по умолчанию для новых пользователей](#ru-endpoint-44)
 
 <a id="ru-endpoint-1"></a>
 
@@ -4380,6 +4422,48 @@ HTTP/1.1 204 No Content
 
 <a id="ru-endpoint-16"></a>
 
+#### Получить показатели нод
+
+##### `GET /api/admin/nodes/metrics`
+
+Возвращает число уникальных пользователей в сети на всех активных нодах, максимальное число одновременных подключений с начала отслеживания и трафик за текущие сутки UTC. Пик фиксируется раз в 15 секунд; кратковременные подключения между замерами могут не попасть в статистику. Пользователь на нескольких нодах учитывается один раз.
+
+**URL запроса**
+
+| Параметр | Значение |
+| --- | --- |
+| Метод | `GET` |
+| URL | `https://panel.example.com/api/admin/nodes/metrics` |
+
+**Тело запроса:** отсутствует.
+
+**Успешный ответ: 200**
+
+| Поле | Формат | Назначение |
+| --- | --- | --- |
+| online_users | integer | Уникальные пользователи с недавним действующим VPN-рукопожатием на включённых и синхронизированных нодах. |
+| peak_online_users | integer | Максимальное число, зафиксированное с момента установки миграции метрик. |
+| traffic_today_bytes | integer (int64) | Сумма полученных и отправленных байтов по всем нодам с 00:00 UTC. |
+
+```json
+{
+  "online_users": 12,
+  "peak_online_users": 27,
+  "traffic_today_bytes": 104857600
+}
+```
+
+**Возможные статусы ответа**
+
+| Статус | Значение |
+| --- | --- |
+| 200 | Успешно; формат ответа показан выше. |
+| 401 | API-ключ отсутствует, неверен, не зарегистрирован или удалён. |
+| 500 | Внутренняя ошибка backend; подробности в серверных логах. |
+| 503 | Таймаут/конфликт блокировок БД либо остановка backend. |
+
+<a id="ru-endpoint-17"></a>
+
 #### Получить ноду
 
 ##### `GET /api/admin/nodes/{id}`
@@ -4473,7 +4557,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-17"></a>
+<a id="ru-endpoint-18"></a>
 
 #### Добавить ноду
 
@@ -4585,7 +4669,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-18"></a>
+<a id="ru-endpoint-19"></a>
 
 #### Изменить ноду
 
@@ -4691,7 +4775,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-19"></a>
+<a id="ru-endpoint-20"></a>
 
 #### Изменить или сбросить публичный VPN-адрес ноды
 
@@ -4798,7 +4882,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-20"></a>
+<a id="ru-endpoint-21"></a>
 
 #### Проверить получение нового отчёта от ноды
 
@@ -4895,7 +4979,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-21"></a>
+<a id="ru-endpoint-22"></a>
 
 #### Запросить перезапуск ноды
 
@@ -4990,7 +5074,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-22"></a>
+<a id="ru-endpoint-23"></a>
 
 #### Запросить перезапуск всех готовых нод
 
@@ -5035,7 +5119,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-23"></a>
+<a id="ru-endpoint-24"></a>
 
 #### Удалить ноду
 
@@ -5162,7 +5246,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-24"></a>
+<a id="ru-endpoint-25"></a>
 
 #### Получить наборы серверов подписок
 
@@ -5218,7 +5302,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-25"></a>
+<a id="ru-endpoint-26"></a>
 
 #### Создать план подписки
 
@@ -5287,7 +5371,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-26"></a>
+<a id="ru-endpoint-27"></a>
 
 #### Изменить план подписки
 
@@ -5363,7 +5447,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-27"></a>
+<a id="ru-endpoint-28"></a>
 
 #### Удалить план подписки
 
@@ -5415,7 +5499,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-28"></a>
+<a id="ru-endpoint-29"></a>
 
 #### Получить текущий доступ пользователя
 
@@ -5499,7 +5583,7 @@ null
 ```
 
 
-<a id="ru-endpoint-29"></a>
+<a id="ru-endpoint-30"></a>
 
 #### Назначить план и срок доступа одному пользователю
 
@@ -5589,7 +5673,7 @@ plan_id:null снимает назначение. Тот же план сохр�
 ```
 
 
-<a id="ru-endpoint-30"></a>
+<a id="ru-endpoint-31"></a>
 
 #### Получить список выданного доступа
 
@@ -5659,7 +5743,7 @@ plan_id:null снимает назначение. Тот же план сохр�
 ```
 
 
-<a id="ru-endpoint-31"></a>
+<a id="ru-endpoint-32"></a>
 
 #### Выдать прямой доступ одному пользователю
 
@@ -5750,7 +5834,7 @@ plan_id:null снимает назначение. Тот же план сохр�
 ```
 
 
-<a id="ru-endpoint-32"></a>
+<a id="ru-endpoint-33"></a>
 
 #### Получить сохранённую ссылку подписки
 
@@ -5805,7 +5889,7 @@ plan_id:null снимает назначение. Тот же план сохр�
 ```
 
 
-<a id="ru-endpoint-33"></a>
+<a id="ru-endpoint-34"></a>
 
 #### Включить, отключить или изменить срок доступа
 
@@ -5867,7 +5951,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-34"></a>
+<a id="ru-endpoint-35"></a>
 
 #### Заменить серверы выданного доступа
 
@@ -5931,7 +6015,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-35"></a>
+<a id="ru-endpoint-36"></a>
 
 #### Заменить ссылки подписки и устройств без замены VPN-ключей
 
@@ -5986,7 +6070,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-36"></a>
+<a id="ru-endpoint-37"></a>
 
 #### Заменить ссылки и отозвать прежние VPN-ключи
 
@@ -6041,7 +6125,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-37"></a>
+<a id="ru-endpoint-38"></a>
 
 #### Удалить выданный доступ
 
@@ -6092,7 +6176,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-38"></a>
+<a id="ru-endpoint-39"></a>
 
 #### Задать или снять лимит трафика доступа
 
@@ -6151,7 +6235,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-39"></a>
+<a id="ru-endpoint-40"></a>
 
 #### Сбросить учтённый трафик доступа
 
@@ -6202,7 +6286,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-40"></a>
+<a id="ru-endpoint-41"></a>
 
 #### Настроить автоматический сброс трафика доступа
 
@@ -6263,7 +6347,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-41"></a>
+<a id="ru-endpoint-42"></a>
 
 #### Получить статистику трафика по дням
 
@@ -6329,7 +6413,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-42"></a>
+<a id="ru-endpoint-43"></a>
 
 #### Получить лимит устройств по умолчанию для новых пользователей
 
@@ -6374,7 +6458,7 @@ HTTP/1.1 204 No Content
 ```
 
 
-<a id="ru-endpoint-43"></a>
+<a id="ru-endpoint-44"></a>
 
 #### Изменить лимит устройств по умолчанию для новых пользователей
 
