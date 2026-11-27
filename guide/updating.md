@@ -37,3 +37,9 @@ sudo docker compose logs --tail=50 backend
 ```
 
 The deployment configuration uses `latest`. [Review release notes](https://github.com/dementia-panel/backend/releases) before updating.
+
+## Existing nodes
+
+Nodes installed before v0.7.1 need one SSH upgrade. In the admin panel, open **Nodes**, choose **Update node**, and enter the VPS SSH credentials. The panel does not retain the password. The upgrade keeps the node's VPN keys and server configuration and installs a host timer that checks the official node release every 12 hours. The node card shows the reported version after the agent reconnects.
+
+Re-download a client profile to receive the new per-node junk-packet settings. Imported profiles are not changed remotely and continue to use their previous settings until re-imported.

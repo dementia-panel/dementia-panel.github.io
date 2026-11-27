@@ -16,6 +16,16 @@ type Release = {
 
 const releases = computed<Release[]>(() => ru.value ? [
   {
+    version: '0.7.1', date: '27 ноября 2026', title: 'Обновление нод и маскировка',
+    summary: 'Однократный SSH-переход старых нод и автоматические обновления новых установок.',
+    changes: [
+      'Ноды получают таймер проверки новых релизов с сохранением VPN-ключей и откатом при ошибке установки.',
+      'Карточка ноды показывает версию агента и позволяет запустить однократное обновление по SSH.',
+      'В новых клиентских профилях число и размер начальных маскирующих пакетов различаются между нодами.',
+      'Сборка ноды обновлена до AmneziaWG-go 3.1.20261116.'
+    ], components: ['Backend', 'Panel', 'Node']
+  },
+  {
     version: '0.7.0', date: '27 ноября 2026', title: 'Стабильный мониторинг нод',
     summary: 'Меньше ложных уведомлений и точный онлайн пользователей на каждой ноде.',
     changes: [
@@ -93,6 +103,16 @@ const releases = computed<Release[]>(() => ru.value ? [
     ], components: ['Backend', 'Panel']
   }
 ] : [
+  {
+    version: '0.7.1', date: 'November 27, 2026', title: 'Node updates and masking',
+    summary: 'One-time SSH upgrade for existing nodes and automatic updates for new installations.',
+    changes: [
+      'Nodes check official releases on a host timer, preserve VPN keys, and roll back failed installations.',
+      'Node cards show the agent version and offer a one-time SSH upgrade action.',
+      'New client profiles vary the initial junk packet count and sizes between nodes.',
+      'The node build uses AmneziaWG-go 3.1.20261116.'
+    ], components: ['Backend', 'Panel', 'Node']
+  },
   {
     version: '0.7.0', date: 'November 27, 2026', title: 'Stable node monitoring',
     summary: 'Fewer false alerts and accurate online user counts for each node.',
