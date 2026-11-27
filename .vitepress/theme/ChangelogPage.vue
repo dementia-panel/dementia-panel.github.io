@@ -16,6 +16,16 @@ type Release = {
 
 const releases = computed<Release[]>(() => ru.value ? [
   {
+    version: '0.7.0', date: '27 ноября 2026', title: 'Стабильный мониторинг нод',
+    summary: 'Меньше ложных уведомлений и точный онлайн пользователей на каждой ноде.',
+    changes: [
+      'Сообщение о потере связи появляется после пяти минут непрерывной недоступности; короткие сбои не создают пару уведомлений.',
+      'Карточка ноды показывает уникальных пользователей с действующим доступом вместо числа устройств.',
+      'Новые VPN-профили используют MTU 1280, а новые ноды по умолчанию получают UDP-порт 1234.',
+      'Добавлены рекомендации по проверке доступа через мобильную сеть и определения страны сервисами.'
+    ], components: ['Backend', 'Panel']
+  },
+  {
     version: '0.6.2', date: '23 ноября 2026', title: 'Событие первого подключения',
     summary: 'Вебхук сообщает о первом подключении пользователя к VPN.',
     changes: [
@@ -83,6 +93,16 @@ const releases = computed<Release[]>(() => ru.value ? [
     ], components: ['Backend', 'Panel']
   }
 ] : [
+  {
+    version: '0.7.0', date: 'November 27, 2026', title: 'Stable node monitoring',
+    summary: 'Fewer false alerts and accurate online user counts for each node.',
+    changes: [
+      'Connection loss is reported after five uninterrupted minutes; short outages no longer create paired alerts.',
+      'Node cards count unique users with active access instead of devices.',
+      'New VPN profiles use MTU 1280, and new nodes default to UDP port 1234.',
+      'Added guidance for mobile network access and service location detection.'
+    ], components: ['Backend', 'Panel']
+  },
   {
     version: '0.6.2', date: 'November 23, 2026', title: 'First connection event',
     summary: 'The webhook now reports a user’s first VPN connection.',
